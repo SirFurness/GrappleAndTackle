@@ -10,6 +10,26 @@ class MenuScene extends Phaser.Scene {
   create() {
     this.tank = this.physics.add.sprite(100, 100, 'tank');
     this.tank.setScale(3);
+
+    this.createDragSelection();
+  }
+
+  createDragSelection() {
+    const graphics = this.add.graphics();
+    const thickness = 2;
+    const color = 0x007ae5;
+    const alpha = 1;
+
+    this.input.on('pointermove', (pointer) => {
+      if (pointer.isDown) {
+        graphics.clear();
+        graphics.lineStyle(thickness, color, alpha);
+        graphics.strokeRect(pointer.downX, pointer.downY,
+          pointer.x - pointer.downX, pointer.y - pointer.downY);
+      }
+    });
+
+    this.input.on('pointerup', () => graphics.clear());
   }
 
   update() {
