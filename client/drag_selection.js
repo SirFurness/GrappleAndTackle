@@ -37,7 +37,7 @@ function highlightObjects(scene, rectangle) {
   });
 }
 
-function createDragSelection(scene) {
+export default function createDragSelection(scene) {
   scene.highlightedObjects = [];
 
   const graphics = scene.add.graphics();
@@ -72,5 +72,3 @@ function createDragSelection(scene) {
     graphics.clear();
   });
 }
-
-module.exports = createDragSelection;

@@ -1,4 +1,6 @@
 import createDragSelection from './drag_selection';
+import createMoveOrder from './move_order';
+import Tank from './tank';
 
 class MenuScene extends Phaser.Scene {
   constructor() {
@@ -10,13 +12,16 @@ class MenuScene extends Phaser.Scene {
   }
 
   create() {
-    this.tank = this.physics.add.sprite(100, 100, 'tank');
+    this.tank = new Tank(this, 100, 100);
+    this.add.existing(this.tank);
     this.tank.setScale(3);
 
     createDragSelection(this);
+    createMoveOrder(this);
   }
 
   update() {
+    this.tank.update();
   }
 }
 
