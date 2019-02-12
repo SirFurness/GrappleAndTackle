@@ -16,20 +16,25 @@ function createRectangleFromPointer(pointer) {
 }
 
 function unhighlightObjects(scene) {
-  scene.highlightedObjects.forEach(object => object.clearTint());
+  scene.highlightedObjects.forEach((object) => {
+    object.setDebug(false, false, 0);
+    object.setData('highlighted', false);
+  });
+  scene.highlightedObjects = [];
 }
 
 function highlightObjects(scene, rectangle) {
-  const tintColor = 0x63a4dd;
+  const debugColor = 0xed0909;
 
   scene.children.getChildren().forEach((object) => {
     try {
-      if ((!Phaser.Geom.Rectangle.Intersection(object.getBounds(), rectangle).isEmpty())
+      if (!object.getData('highlighted') && ((!Phaser.Geom.Rectangle.Intersection(object.getBounds(), rectangle).isEmpty())
         || Phaser.Geom.Rectangle.ContainsPoint(
           object.getBounds(), new Phaser.Geom.Point(rectangle.x, rectangle.y),
-        )) {
+        ))) {
         scene.highlightedObjects.push(object);
-        object.tint = tintColor;
+        object.setDebug(true, false, debugColor);
+        object.setData('highlighted', true);
       }
     } catch (err) {
       // GameObject does not have getBounds
@@ -61,8 +66,9 @@ export default function createDragSelection(scene) {
   });
 
   const shiftKey = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
+  const altKey = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ALT);
   scene.input.on('pointerdown', (pointer) => {
-    if (!shiftKey.isDown) {
+    if (!(shiftKey.isDown || altKey.isDown)) {
       unhighlightObjects(scene);
     }
     highlightObjects(scene, new Phaser.Geom.Rectangle(pointer.x, pointer.y, 0, 0));

@@ -12,16 +12,26 @@ class MenuScene extends Phaser.Scene {
   }
 
   create() {
-    this.tank = new Tank(this, 100, 100);
-    this.add.existing(this.tank);
-    this.tank.setScale(3);
+    this.tanks = this.physics.add.group();
+    this.physics.add.collider(this.tanks, this.tanks);
+    this.tanks.createFromConfig({
+      classType: Tank, repeat: 3, setXY: { x: 100, y: 100, stepY: 100 }, key: 'tank',
+    })
+      .forEach((tank) => {
+        tank.setScale(3);
+        tank.setMass(10);
+        tank.setDebug(false, false, 0);
+        tank.setCollideWorldBounds(true);
+        tank.setDamping(true);
+        tank.setDrag(0.99);
+      });
+    this.tanks.runChildUpdate = true;
 
     createDragSelection(this);
     createMoveOrder(this);
   }
 
   update() {
-    this.tank.update();
   }
 }
 
@@ -35,6 +45,9 @@ const config = {
   pixelArt: true,
   physics: {
     default: 'arcade',
+    arcade: {
+      debug: true,
+    },
   },
   audio: {
     disableWebAudio: true,

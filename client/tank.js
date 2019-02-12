@@ -1,6 +1,6 @@
 import Movement from './movement';
 
-export default class Tank extends Phaser.GameObjects.Sprite {
+export default class Tank extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y) {
     super(scene, x, y);
 
