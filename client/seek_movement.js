@@ -6,12 +6,12 @@ export default function calculateSeekAngularVelocity(
   const angularVelocityScalar = 100;
   const destAngle = utils.calculateRotationAngle(currentPosition, destinationPosition);
 
-  let angularVelocity = utils.directionToRotate(currentRotation, destAngle) * angularVelocityScalar;
+  const directionToRotate = utils.directionToRotate(currentRotation, destAngle);
+  let angularVelocity = directionToRotate * angularVelocityScalar;
 
   const distanceToRotate = utils.distanceToRotate(currentRotation, destAngle);
   if (distanceToRotate < angularVelocityScalar / 60 * Math.PI / 180) {
-    angularVelocity = angularVelocity / angularVelocityScalar
-        * distanceToRotate * 60 * 180 / Math.PI;
+    angularVelocity = directionToRotate * distanceToRotate * 60 * 180 / Math.PI;
   }
 
   return angularVelocity;
