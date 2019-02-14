@@ -50,3 +50,13 @@ export function getVelocityFromAngle(angle) {
 
   return { xVel, yVel };
 }
+
+export function calculateRotationAngle(initial, destination) {
+  const { x, y } = initial;
+  const { x: destX, y: destY } = destination;
+  const deltaX = destX - x;
+  const deltaY = -(destY - y);
+
+  const angle = Math.atan2(deltaY, deltaX);
+  return convertToGameAngle(angle);
+}

@@ -1,4 +1,5 @@
 import * as utils from './movement_utils';
+import calculateSeekAngularVelocity from './seek_movement';
 
 export default class Movement {
   constructor(scene, gameObject) {
@@ -17,6 +18,7 @@ export default class Movement {
 
   moveTo(destX, destY) {
     this.isMoving = true;
+    this.destination = { x: destX, y: destY };
     this.destX = destX;
     this.destY = destY;
 
@@ -36,7 +38,9 @@ export default class Movement {
 
   update() {
     if (this.isMoving) {
-      const seekAngularVelocity = this.calculateSeekAngularVelocity();
+      const seekAngularVelocity = calculateSeekAngularVelocity(
+        this.object.rotation, this.getBarrelLocation(), this.destination,
+      );
       this.object.setAngularVelocity(seekAngularVelocity);
 
       this.setVelocityBasedOnTankAngle();
@@ -53,20 +57,6 @@ export default class Movement {
       && Math.abs(y - this.destY) < this.positionTolerance);
   }
 
-  calculateSeekAngularVelocity() {
-    const destAngle = this.calculateRotationAngle();
-
-    let angularVelocity = utils.directionToRotate(this.object.rotation, destAngle)
-      * this.angularVelocity;
-
-    const distanceToRotate = utils.distanceToRotate(this.object.rotation, destAngle);
-    if (distanceToRotate < this.angularVelocity / 60 * Math.PI / 180) {
-      angularVelocity = 0;
-      this.object.rotation = destAngle;
-    }
-
-    return angularVelocity;
-  }
 
   setVelocityBasedOnTankAngle() {
     const { xVel, yVel } = utils.getVelocityFromAngle(this.object.rotation);
@@ -76,15 +66,6 @@ export default class Movement {
   isDestinationInsideTank() {
     return (Phaser.Geom.Rectangle.ContainsPoint(this.object.getBounds(),
       new Phaser.Geom.Point(this.destX, this.destY)));
-  }
-
-  calculateRotationAngle() {
-    const { x, y } = this.getBarrelLocation();
-    const deltaX = this.destX - x;
-    const deltaY = -(this.destY - y);
-
-    const angle = Math.atan2(deltaY, deltaX);
-    return utils.convertToGameAngle(angle);
   }
 
   getBarrelLocation() {
