@@ -1,4 +1,4 @@
-import Phaser from './phaser.min';
+import Phaser from '../phaser.min';
 
 export function convertToGameAngle(angle) {
   return Phaser.Math.Angle.Wrap(Math.PI / 2 - angle);

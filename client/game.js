@@ -1,6 +1,6 @@
 import Phaser from './phaser.min';
 import createDragSelection from './drag_selection';
-import createMoveOrder from './move_order';
+import createMoveOrder from './movement/move_order';
 import Tank from './tank';
 
 class MenuScene extends Phaser.Scene {

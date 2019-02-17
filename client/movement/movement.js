@@ -1,4 +1,4 @@
-import Phaser from './phaser.min';
+import Phaser from '../phaser.min';
 import * as utils from './movement_utils';
 import calculateSeekAngularVelocity from './seek_movement';
 import calculateSeparationAngularVelocity from './separation_movement';
