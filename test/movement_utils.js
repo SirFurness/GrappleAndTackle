@@ -12,7 +12,7 @@ exports.getVelocityFromAngle = getVelocityFromAngle;
 exports.calculateRotationAngle = calculateRotationAngle;
 exports.smallestDistanceBetweenRectangleVertices = smallestDistanceBetweenRectangleVertices;
 
-var _phaser = _interopRequireDefault(require("./phaser.min"));
+var _phaser = _interopRequireDefault(require("../phaser.min"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -84,8 +84,8 @@ function calculateRotationAngle(initial, destination, currentRotation) {
   var deltaY = -(destY - y);
   var angle = Math.atan2(deltaY, deltaX);
   var gameAngle = convertToGameAngle(angle);
-  var angleChange = currentRotation - gameAngle;
-  return -_phaser.default.Math.Angle.Wrap(angleChange);
+  var angleChange = gameAngle - currentRotation;
+  return _phaser.default.Math.Angle.Wrap(angleChange);
 }
 
 function smallestDistanceBetweenRectangleVertices(rect1, rect2) {

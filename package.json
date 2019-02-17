@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "babel client/movement_utils.js -o test/movement_utils.js; mocha test/test.nofix.js"
+    "test": "babel client/movement/movement_utils.js -o test/movement_utils.js; mocha test/test.nofix.js"
   },
   "author": "Eric",
   "license": "ISC",

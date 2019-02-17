@@ -6,6 +6,7 @@ export default class Tank extends Phaser.Physics.Arcade.Sprite {
     super(scene, x, y);
 
     this.movement = new Movement(scene, this);
+    this.setData('type', 'tank');
 
     this.setTexture('tank');
     this.setPosition(x, y);

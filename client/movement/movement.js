@@ -44,11 +44,11 @@ export default class Movement {
       const seekAngularVelocity = calculateSeekAngularVelocity(
         this.object.rotation, { x: bounds.centerX, y: bounds.centerY }, this.destination,
       );
-      // const separationAngularVelocity = calculateSeparationAngularVelocity(
-      //  this.object, this.scene.children.getChildren(), this.object.rotation, this.object.getBounds(),
-      // );
+      const separationAngularVelocity = calculateSeparationAngularVelocity(
+        this.object, this.scene.children.getChildren(), this.object.rotation, this.object.getBounds(),
+      );
 
-      this.object.setAngularVelocity(seekAngularVelocity);
+      this.object.setAngularVelocity(seekAngularVelocity + separationAngularVelocity);
 
       this.setVelocityBasedOnTankAngle();
 
