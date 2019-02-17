@@ -2,6 +2,9 @@ import Phaser from '../phaser.min';
 import * as utils from './movement_utils';
 import calculateSeekAngularVelocity from './seek_movement';
 import calculateSeparationAngularVelocity from './separation_movement';
+import calculateAlignmentAngularVelocity from './alignment_movement';
+import calculateCohesionAngularVelocity from './cohesion_movement';
+import areNearbyAtDestination from './nearby_destination';
 
 export default class Movement {
   constructor(scene, gameObject) {
@@ -45,25 +48,64 @@ export default class Movement {
         this.object.rotation, { x: bounds.centerX, y: bounds.centerY }, this.destination,
       );
       const separationAngularVelocity = calculateSeparationAngularVelocity(
-        this.object, this.scene.children.getChildren(), this.object.rotation, this.object.getBounds(),
+        this.object, this.scene.children.getChildren(),
       );
-
-      this.object.setAngularVelocity(seekAngularVelocity + separationAngularVelocity);
+      const alignmentAngularVelocity = calculateAlignmentAngularVelocity(
+        this.object, this.scene.children.getChildren(),
+      );
+      const cohesionAngularVelocity = calculateCohesionAngularVelocity(
+        this.object, this.scene.children.getChildren(),
+      );
+      // TODO loop through neighbors once, calculate all neighbor based things on that go
+      this.object.setAngularVelocity(
+        seekAngularVelocity + separationAngularVelocity
+        + alignmentAngularVelocity + cohesionAngularVelocity,
+      );
 
       this.setVelocityBasedOnTankAngle();
 
-      if (this.isAtDestination()) {
+      if (this.isAtDestination()
+        || this.isLaterallyAtDestination()
+        || areNearbyAtDestination(this.object, this.scene.children.getChildren())) {
         this.stopMoving();
       }
     }
   }
 
   isAtDestination() {
-    const { x, y } = this.getBarrelLocation();
-    return (Math.abs(x - this.destX) < this.positionTolerance
-      && Math.abs(y - this.destY) < this.positionTolerance);
+    const isBarrelNear = utils.fuzzyAtLocation(
+      this.getBarrelLocation(), this.destination, this.positionTolerance,
+    );
+    const { centerX, centerY } = this.object.getBounds();
+    const isCenterNear = utils.fuzzyAtLocation(
+      { x: centerX, y: centerY }, this.destination, 2 * this.positionTolerance,
+    );
+    return isBarrelNear || isCenterNear;
   }
 
+  isLaterallyAtDestination() {
+    const minimumDistance = 100;
+    if (Phaser.Math.Distance.Between(
+      this.destX, this.destY,
+      this.object.getBounds().centerX, this.object.getBounds().centerY,
+    )
+      > minimumDistance) {
+      return false;
+    }
+    const angle = utils.convertToNormalAngle(this.object.rotation);
+
+    const deltaX = this.destX - this.object.getBounds().centerX;
+
+    const perpendicular = -Math.cos(angle) / Math.sin(angle) * deltaX + this.object.getBounds().centerY;
+    const upper = perpendicular + this.object.getBounds().width / 2;
+    const lower = perpendicular - this.object.getBounds().width / 2;
+
+    if (this.destY <= upper && this.destY >= lower) {
+      return true;
+    }
+
+    return false;
+  }
 
   setVelocityBasedOnTankAngle() {
     const { xVel, yVel } = utils.getVelocityFromAngle(this.object.rotation);
