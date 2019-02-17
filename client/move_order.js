@@ -1,3 +1,5 @@
+import Phaser from './phaser.min';
+
 export default function createMoveOrder(scene) {
   const alt = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ALT);
   scene.input.on('pointerdown', (pointer) => {

@@ -1,3 +1,5 @@
+import Phaser from './phaser.min';
+
 function createRectangleFromPointer(pointer) {
   let width = pointer.x - pointer.downX;
   let height = pointer.y - pointer.downY;

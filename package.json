@@ -4,20 +4,26 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "babel client/movement_utils.js -o test/movement_utils.js; mocha test/test.nofix.js"
   },
   "author": "Eric",
   "license": "ISC",
   "devDependencies": {
-    "eslint": "^5.13.0",
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.3.3",
+    "@babel/preset-env": "^7.3.1",
+    "babel-cli": "^6.26.0",
+    "eslint": "^5.14.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.16.0",
-    "nodemon": "^1.18.9",
-    "webpack": "^4.29.3",
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.10",
+    "webpack": "^4.29.4",
     "webpack-cli": "^3.2.3"
   },
   "dependencies": {
     "express": "^4.16.4",
+    "jsdom": "^13.2.0",
     "socket.io": "^2.2.0"
   }
 }

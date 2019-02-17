@@ -1,3 +1,4 @@
+import Phaser from './phaser.min';
 import Movement from './movement';
 
 export default class Tank extends Phaser.Physics.Arcade.Sprite {

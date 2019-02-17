@@ -1,7 +1,6 @@
 {
   "extends": "airbnb-base",
   "globals": {
-    "Phaser": true,
     "window": true
   }
 }

@@ -1,5 +1,7 @@
+import Phaser from './phaser.min';
 import * as utils from './movement_utils';
 import calculateSeekAngularVelocity from './seek_movement';
+import calculateSeparationAngularVelocity from './separation_movement';
 
 export default class Movement {
   constructor(scene, gameObject) {
@@ -10,7 +12,7 @@ export default class Movement {
 
     this.xVelMagnitude = 100;
     this.yVelMagnitude = 100;
-    this.positionTolerance = 5.0;
+    this.positionTolerance = 2.0;
 
     this.angularVelocity = 100;
     this.angularTolerance = 0.01;
@@ -38,9 +40,14 @@ export default class Movement {
 
   update() {
     if (this.isMoving) {
+      const bounds = this.object.getBounds();
       const seekAngularVelocity = calculateSeekAngularVelocity(
-        this.object.rotation, this.getBarrelLocation(), this.destination,
+        this.object.rotation, { x: bounds.centerX, y: bounds.centerY }, this.destination,
       );
+      // const separationAngularVelocity = calculateSeparationAngularVelocity(
+      //  this.object, this.scene.children.getChildren(), this.object.rotation, this.object.getBounds(),
+      // );
+
       this.object.setAngularVelocity(seekAngularVelocity);
 
       this.setVelocityBasedOnTankAngle();
